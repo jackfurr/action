@@ -5,7 +5,7 @@ module.exports = function (app, passport) {
 
 	router.get('/', function(req, res) {
 		var email = '';
-		var log_in_out = {location:'/auth/login', text: 'Login'};
+		var log_in_out = {location:'/login', text: 'Login'};
 
 		// SET req.session.lastAccess = new Date().getTime(); When this is
 		// loaded as well as all of the Backbone API cals
@@ -14,7 +14,7 @@ module.exports = function (app, passport) {
 		}
 
 		if (req.user) {
-			log_in_out = {location:'/auth/logout', text: 'Logout'};
+			log_in_out = {location:'/logout', text: 'Logout'};
 			email = req.user.email;
 		}
 
@@ -23,6 +23,27 @@ module.exports = function (app, passport) {
 			email: email,
 			log_in_out: log_in_out
 		});
+	});
+
+	router.post('/login',
+		passport.authenticate('local', {
+			successRedirect: '/',
+			failureRedirect: '/login',
+			failureFlash: 'Invalid user name or password.'
+		}), function(req, res) {
+			// FixMe: What should I do here?
+		}
+	);
+
+	router.get('/login', function(req, res) {
+		res.render('login', {
+			title: 'Login'
+		});
+	});
+
+	router.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
 	});
 
 };
