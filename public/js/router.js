@@ -1,8 +1,8 @@
 define([
     'jquery',
-    'backbone'
-], function($, Backbone) {
-
+    'backbone',
+    'app_config'
+], function($, Backbone, AppConfig) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             // Default
@@ -11,25 +11,15 @@ define([
         }
     });
 
-    var currentView = null;
-
     var initialize = function(){
 
-        var _app = window.AppData;
         var app_router = new AppRouter();
-        var currentView = null;
 
         app_router.on('route:showLoginView', function () {
-            // if (undefined !== this.currentView) {
-            //     this.currentView.close();
-            // }
-
-            var me = this;
             try {
-                require(['app_config', 'views/login_view'], function(appConfig, LoginView) {
-                    var view = new LoginView({'app_config':appConfig});
+                require(['views/login_view'], function(LoginView) {
+                    var view = new LoginView({'app_config':AppConfig});
                     $("#content").html(view.render().el);
-                    //me.currentView = view;
                 });
             }
             catch (e) {
@@ -38,16 +28,10 @@ define([
         });
 
         app_router.on('route:default', function () {
-            // if (undefined !== this.currentView) {
-            //     this.currentView.close();
-            // }
-
-            var me = this;
             try {
-                require(['app_config', 'views/home_view'], function(appConfig, HomeView) {
-                    var view = new HomeView({'app_config':appConfig});
+                require(['views/home_view'], function(HomeView) {
+                    var view = new HomeView({'app_config':AppConfig});
                     $("#content").html(view.render().el);
-                    //me.currentView = view;
                 });
             }
             catch (e) {
